@@ -5,32 +5,17 @@
 
         <span class="p-input-icon-left mb-4">
             <i class="pi pi-user"></i>
-            <input type="text" pInputText placeholder="Email" class="w-full">         
+            <input id="email" type="text" pInputText placeholder="Email" class="w-full" [(ngModel)]="email">         
         </span>
 
         <span class="p-input-icon-left mb-4">
             <i class="pi pi-key"></i>
-            <input type="password" pInputText placeholder="Password" class="w-full">         
+            <input id="password" type="password" pInputText placeholder="Password" class="w-full" [(ngModel)]="password">         
         </span>
 
-        <button [routerLink]="['/']" pButton pRipple label="Sign In" class="mb-4"></button>
+        <button (click)="login()" pButton pRipple label="Sign In" class="mb-4"></button>
 
         <span class="text-color-secondary text-center mb-4">or sign in with below</span>
-
-        <div class="flex gap-4 align-items-center justify-content-center">
-            <a href="https://www.facebook.com" class="inline-flex flex-shrink-0 w-3rem h-3rem justify-content-center align-items-center surface-ground border-circle">
-                <i class="pi pi-facebook text-2xl text-color"></i>
-            </a>
-            <a href="https://www.twitter.com" class="inline-flex flex-shrink-0 w-3rem h-3rem justify-content-center align-items-center surface-ground border-circle">
-                <i class="pi pi-twitter text-2xl text-color"></i>
-            </a>
-            <a href="https://www.google.com" class="inline-flex flex-shrink-0 w-3rem h-3rem justify-content-center align-items-center surface-ground border-circle">
-                <i class="pi pi-google text-2xl text-color"></i>
-            </a>
-            <a href="https://www.github.com" class="inline-flex flex-shrink-0 w-3rem h-3rem justify-content-center align-items-center surface-ground border-circle">
-                <i class="pi pi-github text-2xl text-color"></i>
-            </a>
-        </div>
     </div>
 </div>
 
