@@ -8,7 +8,7 @@ const routes: Routes = [
         path: '', component: AppLayoutComponent,
         children: [
             { path: '',canActivate: [AuthGuard], loadChildren: () => import('./demo/components/pages/empty/emptydemo.module').then(m => m.EmptyDemoModule) },
-            { path: 'pages', data: { breadcrumb: 'Pages' }, loadChildren: () => import('./demo/components/pages/pages.module').then(m => m.PagesModule) },
+            { path: 'pages', canActivate: [AuthGuard], data: { breadcrumb: 'Pages' }, loadChildren: () => import('./demo/components/pages/pages.module').then(m => m.PagesModule) },
         ]
     },
     { path: 'auth', data: { breadcrumb: 'Auth' }, loadChildren: () => import('./demo/components/auth/auth.module').then(m => m.AuthModule) },
