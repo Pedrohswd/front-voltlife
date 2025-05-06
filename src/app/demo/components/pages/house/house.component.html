@@ -31,41 +31,39 @@
                     </span>
                 </div>
 
-                <form [formGroup]="enderecoForm">
+                <form [formGroup]="houseForm">
                     <div class="p-fluid">
                         <div class="field">
-                            <label for="nome">Nome</label>
-                            <input id="nome" type="text" pInputText />
+                            <label for="name">Nome</label>
+                            <input id="name" type="text" pInputText formControlName="name" />
                         </div>
                         <div class="field">
                             <label for="cep">CEP</label>
-                            <input id="cep" type="text" pInputText />
+                            <input id="cep" type="text" pInputText formControlName="cep" />
                         </div>
-
                         <div class="field">
                             <label for="street">Rua</label>
-                            <input id="street" type="text" pInputText />
+                            <input id="street" type="text" pInputText formControlName="street" />
                         </div>
-
                         <div class="field">
                             <label for="number">Numero</label>
-                            <input id="number" type="text" pInputText />
+                            <input id="number" type="text" pInputText formControlName="number" />
                         </div>
                         <div class="field">
-                            <label for="bairro">Bairro</label>
-                            <input id="bairro" type="text" pInputText />
+                            <label for="district">Bairro</label>
+                            <input id="district" type="text" pInputText formControlName="district" />
                         </div>
                         <div class="field">
-                            <label for="cidade">Cidade</label>
-                            <input id="cidade" type="text" pInputText />
+                            <label for="city">Cidade</label>
+                            <input id="city" type="text" pInputText formControlName="city" />
                         </div>
                         <div class="field">
-                            <label for="estado">Estado</label>
-                            <input id="estado" type="text" pInputText />
+                            <label for="state">Estado</label>
+                            <input id="state" type="text" pInputText formControlName="state" />
                         </div>
                         <div class="field">
-                            <label for="pais">País</label>
-                            <input id="pais" type="text" pInputText />
+                            <label for="country">País</label>
+                            <input id="country" type="text" pInputText formControlName="country" />
                         </div>
                     </div>
                 </form>
@@ -73,28 +71,30 @@
 
 
             <div class="mt-3 flex gap-2 justify-content-end">
+                <p-toast />
                 <button pButton label="Cancelar" severity="secondary" (click)="finalizarCadastro()"></button>
-                <button pButton label="Salvar" icon="pi pi-check" (click)="finalizarCadastro()"></button>
+                <button pButton label="Salvar" icon="pi pi-check" (click)="register()"></button>
             </div>
         </div>
 
         <!-- seus cards continuam aqui... -->
         <div *ngIf="!cadastroAtivo" class="grid mb-5">
             <!-- cards existentes -->
-            <div class="col-12 md:col-6 lg:col-4" *ngFor="let casa of casas">
-                <p-card [style]="{ width: '100%', overflow: 'hidden' }">
+            <div class="col-12 md:col-6 lg:col-4" *ngFor="let casa of houses">
+                <p-card [style]="{ width: '100%', minHeight: '350px' }" class="h-full flex flex-column justify-between">
 
-                    <span
-                        class="inline-flex align-items-center justify-content-center border-circle w-5rem h-5rem bg-primary-100 mb-5">
-                        <i class="pi pi-home text-4xl text-primary-700"></i>
-                    </span>
+                    <div class="flex gap-2">
+                        <span
+                            class="inline-flex align-items-center justify-content-center border-circle w-5rem h-5rem bg-primary-100 mb-5">
+                            <i class="pi pi-home text-4xl text-primary-700"></i>
+                        </span>
+                        <h3>{{ casa.name }}</h3>
+                    </div>
+
 
                     <!--Cabeçalho-->
-                    <h3>{{ casa.nome }}</h3>
-                    <h6>Endereço: {{ casa.endereco }}</h6>
 
-                    <!-- Conteúdo -->
-                    <p>Descrição: {{ casa.descricao }}</p>
+                    <h6>Endereço: {{ casa.street }}, {{ casa.number }} - {{ casa.city }}</h6>
 
                     <!-- Rodapé com botões -->
                     <div class="flex gap-2 justify-content-end">
