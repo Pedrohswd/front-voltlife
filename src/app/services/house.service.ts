@@ -31,13 +31,17 @@ export class HouseService {
     return this.http.get<House>(`${this.apiUrl}/${id}`);
   }
 
-  update(id: number, house: House): Observable<House> {
+  update(id?: number, house?: House): Observable<House> {
     return this.http.put<House>(`${this.apiUrl}/${id}`, house);
   }
 
   addGuest(houseId: number, email: string): Observable<HouseUser> {
     const params = new HttpParams().set('email', email);
     return this.http.post<HouseUser>(`${this.apiUrl}/${houseId}/add-guest`, null, { params });
+  }
+
+  removeGuest(houseId: number, email: string): Observable<void> {
+    return this.http.delete<void>(`${this.apiUrl}/${houseId}/remove-guest/${email}`);
   }
 
   delete(id: number): Observable<void> {

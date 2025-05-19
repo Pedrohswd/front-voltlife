@@ -3,7 +3,7 @@ import { Component, OnInit } from '@angular/core';
 import { InputTextModule } from 'primeng/inputtext';
 import { ButtonModule } from 'primeng/button';
 import { CardModule } from 'primeng/card';
-import { FormBuilder, FormGroup, ReactiveFormsModule, Validators } from '@angular/forms';
+import { FormBuilder, FormGroup, FormsModule, ReactiveFormsModule, Validators } from '@angular/forms';
 import { HttpClientModule } from '@angular/common/http';
 import { HouseService } from 'src/app/services/house.service';
 import { House } from 'src/app/model/house';
@@ -19,7 +19,8 @@ import { ToastModule } from 'primeng/toast';
     CardModule,
     ReactiveFormsModule,
     HttpClientModule,
-    ToastModule
+    ToastModule,
+    FormsModule
   ],
   providers: [MessageService],
   templateUrl: './house.component.html',
@@ -45,9 +46,11 @@ export class HouseComponent implements OnInit {
     }
   ];
   houses: House[] = []
-
-
+  modoEdicao = false;
+  casaEditando: House | null = null;
   houseForm!: FormGroup;
+  emailUsuarioGuest: string = '';
+  listaDeUsuarios: any[] = [];
 
   constructor(private fb: FormBuilder, private houseService: HouseService, private messageService: MessageService) {
     this.houseForm = this.fb.group({
@@ -71,34 +74,83 @@ export class HouseComponent implements OnInit {
 
   register() {
     if (this.houseForm.valid) {
-      const newHouse = new House(this.houseForm);
-      this.houseService.create(newHouse).subscribe({
-        next: (data) => {
-          this.messageService.add({
-            severity: 'success',
-            summary: 'Sucesso',
-            detail: 'Casa cadastrada com sucesso!',
-          });
-          location.reload()
-        },
-        error: (err) => {
-          console.error('Erro ao cadastrar casa:', err);
-          this.messageService.add({
-            severity: 'error',
-            summary: 'Erro',
-            detail: err?.error?.message || 'Ocorreu um erro ao cadastrar a casa.',
-          });
-        },
-      });
+      const houseData = new House(this.houseForm);
+
+      if (this.modoEdicao && this.casaEditando) {
+        houseData.id = this.casaEditando.id;
+        this.houseService.update(houseData.id, houseData).subscribe({
+          next: () => {
+            this.messageService.add({ severity: 'success', summary: 'Sucesso', detail: 'Casa atualizada com sucesso!' });
+            location.reload();
+          },
+          error: (err) => {
+            this.messageService.add({ severity: 'error', summary: 'Erro', detail: err?.error?.message || 'Erro ao atualizar.' });
+          },
+        });
+      } else {
+        this.houseService.create(houseData).subscribe({
+          next: () => {
+            this.messageService.add({ severity: 'success', summary: 'Sucesso', detail: 'Casa cadastrada com sucesso!' });
+            location.reload();
+          },
+          error: (err) => {
+            this.messageService.add({ severity: 'error', summary: 'Erro', detail: err?.error?.message || 'Erro ao cadastrar.' });
+          },
+        });
+      }
     } else {
       this.messageService.add({ severity: 'warn', summary: 'Inválido', detail: 'Dados inválidos' });
     }
   }
 
-  editarCasa(casa: any) {
-    // Lógica para editar
-    console.log('Editar', casa);
+  editarCasa(casa: House) {
+    this.cadastroAtivo = true;
+    this.modoEdicao = true;
+    this.casaEditando = casa;
+
+    this.houseForm.patchValue({
+      name: casa.name,
+      cep: casa.cep,
+      street: casa.street,
+      number: casa.number,
+      district: casa.district,
+      city: casa.city,
+      state: casa.state,
+      country: casa.country
+    });
+
+    this.listaDeUsuarios = casa.users || [];
   }
+
+  adicionarUsuario() {
+    if (this.emailUsuarioGuest && this.casaEditando?.id) {
+      this.houseService.addGuest(this.casaEditando.id, this.emailUsuarioGuest).subscribe({
+        next: () => {
+          this.messageService.add({ severity: 'success', summary: 'Usuário Adicionado', detail: 'Usuário adicionado com sucesso!' });
+          this.emailUsuarioGuest = '';
+          location.reload();
+        },
+        error: (err) => {
+          this.messageService.add({ severity: 'error', summary: 'Erro', detail: err?.error?.message || 'Erro ao adicionar usuário.' });
+        }
+      });
+    }
+  }
+
+  removerUsuario(email: string) {
+    if (email && this.casaEditando?.id) {
+      this.houseService.removeGuest(this.casaEditando.id, email).subscribe({
+        next: () => {
+          this.messageService.add({ severity: 'success', summary: 'Usuário Adicionado', detail: 'Usuário removido com sucesso!' });
+          location.reload();
+        },
+        error: (err) => {
+          this.messageService.add({ severity: 'error', summary: 'Erro', detail: err?.error?.message || 'Erro ao remover usuário.' });
+        }
+      });
+    }
+  }
+
 
   excluirCasa(casa: any) {
     // Lógica para excluir
@@ -111,5 +163,8 @@ export class HouseComponent implements OnInit {
 
   finalizarCadastro() {
     this.cadastroAtivo = false;
+    this.modoEdicao = false;
+    this.casaEditando = null;
+    this.houseForm.reset();
   }
 }
