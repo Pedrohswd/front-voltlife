@@ -1,6 +1,6 @@
 # ⚡ VoltLife Frontend
 
-Este é o frontend do sistema **VoltLife**, uma plataforma de gestão financeira pessoal e empresarial, desenvolvido em Angular. Ele fornece uma interface intuitiva para gerenciar lançamentos, metas, grupos financeiros e visualizar relatórios.
+Este é o frontend do sistema **VoltLife**, uma plataforma de gestão de consumo, desenvolvido em Angular. Ele fornece uma interface intuitiva para gerenciar casas e aparelhos eletronicos.
 
 ## 🧰 Tecnologias Utilizadas
 
@@ -14,9 +14,9 @@ Este é o frontend do sistema **VoltLife**, uma plataforma de gestão financeira
 ## 🚀 Funcionalidades
 
 - Autenticação de usuários
-- Cadastro e listagem de lançamentos financeiros
-- Criação e gestão de grupos, metas e categorias
-- Relatórios financeiros com agrupamento por tipo e filtros dinâmicos
+- Cadastro e listagem de casas
+- Criação e gestão de eletronicos
+- Relatórios
 - Responsivo e mobile-friendly
 
 ## 📦 Instalação
