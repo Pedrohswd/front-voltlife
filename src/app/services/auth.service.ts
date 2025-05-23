@@ -11,7 +11,6 @@ import { API_CONFIG } from '../config/API_CONFIG';
 })
 export class AuthService {
 
-
   private apiUrl = `${API_CONFIG.baseUrl}/authenticate`;
   private currentUserSubject = new BehaviorSubject<JwtResponse | null>(null);
 
@@ -99,7 +98,6 @@ export class AuthService {
       return false;
     }
   }
-
   getUserId(): any{
     const token = this.authToken;
     
@@ -113,7 +111,6 @@ export class AuthService {
       console.error('Erro ao decodificar o token', e);
     }
   }
-
   getUsername(): any {
     const token = this.authToken;
     if (!token) return "GUEST";

@@ -4,10 +4,12 @@ import { Observable } from 'rxjs';
 import { HttpClient } from '@angular/common/http';
 import { API_CONFIG } from '../config/API_CONFIG';
 
+
 @Injectable({
   providedIn: 'root'
 })
 export class UserService {
+
   private apiUrl = `${API_CONFIG.baseUrl}/users`;
 
   constructor(private http: HttpClient) {}
