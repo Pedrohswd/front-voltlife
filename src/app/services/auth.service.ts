@@ -4,6 +4,7 @@ import {Router} from "@angular/router";
 import { BehaviorSubject, catchError, Observable, tap, throwError } from 'rxjs';
 import { HttpClient, HttpHeaders } from '@angular/common/http';
 import { JwtResponse } from '../model/auth';
+import { API_CONFIG } from '../config/API_CONFIG';
 
 @Injectable({
   providedIn: 'root'
@@ -11,7 +12,7 @@ import { JwtResponse } from '../model/auth';
 export class AuthService {
 
 
-  private apiUrl = 'http://localhost:8080/authenticate';
+  private apiUrl = `${API_CONFIG.baseUrl}/authenticate`;
   private currentUserSubject = new BehaviorSubject<JwtResponse | null>(null);
 
   constructor(private http: HttpClient, private router: Router) {
@@ -96,6 +97,20 @@ export class AuthService {
     } catch (e) {
       console.error('Erro ao decodificar o token', e);
       return false;
+    }
+  }
+
+  getUserId(): any{
+    const token = this.authToken;
+    
+    if (!token) return "GUEST";
+
+    try {
+      const decoded: any = jwtDecode(token); // Decodifica o JWT
+      const username = decoded.jti;
+      return username;
+    } catch (e) {
+      console.error('Erro ao decodificar o token', e);
     }
   }
 
