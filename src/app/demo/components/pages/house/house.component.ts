@@ -81,7 +81,7 @@ export class HouseComponent implements OnInit {
         this.houseService.update(houseData.id, houseData).subscribe({
           next: () => {
             this.messageService.add({ severity: 'success', summary: 'Sucesso', detail: 'Casa atualizada com sucesso!' });
-            location.reload();
+            this.atualizarSessao();
           },
           error: (err) => {
             this.messageService.add({ severity: 'error', summary: 'Erro', detail: err?.error?.message || 'Erro ao atualizar.' });
@@ -91,7 +91,7 @@ export class HouseComponent implements OnInit {
         this.houseService.create(houseData).subscribe({
           next: () => {
             this.messageService.add({ severity: 'success', summary: 'Sucesso', detail: 'Casa cadastrada com sucesso!' });
-            location.reload();
+            this.atualizarSessao();
           },
           error: (err) => {
             this.messageService.add({ severity: 'error', summary: 'Erro', detail: err?.error?.message || 'Erro ao cadastrar.' });
@@ -128,7 +128,7 @@ export class HouseComponent implements OnInit {
         next: () => {
           this.messageService.add({ severity: 'success', summary: 'Usuário Adicionado', detail: 'Usuário adicionado com sucesso!' });
           this.emailUsuarioGuest = '';
-          location.reload();
+          this.atualizarSessao();
         },
         error: (err) => {
           this.messageService.add({ severity: 'error', summary: 'Erro', detail: err?.error?.message || 'Erro ao adicionar usuário.' });
@@ -142,7 +142,7 @@ export class HouseComponent implements OnInit {
       this.houseService.removeGuest(this.casaEditando.id, email).subscribe({
         next: () => {
           this.messageService.add({ severity: 'success', summary: 'Usuário Adicionado', detail: 'Usuário removido com sucesso!' });
-          location.reload();
+          this.atualizarSessao();
         },
         error: (err) => {
           this.messageService.add({ severity: 'error', summary: 'Erro', detail: err?.error?.message || 'Erro ao remover usuário.' });
@@ -151,10 +151,23 @@ export class HouseComponent implements OnInit {
     }
   }
 
+  atualizarSessao() {
+    this.finalizarCadastro()
+    location.reload()
+  }
+
 
   excluirCasa(casa: any) {
-    // Lógica para excluir
-    console.log('Excluir', casa);
+    this.houseService.delete(casa.id).subscribe({
+      next: () => {
+        this.houses = this.houses.filter(h => h.id !== casa.id);
+        this.messageService.add({ severity: 'success', summary: 'Sucesso', detail: 'Casa excluída com sucesso!' });
+        this.atualizarSessao();
+      },
+      error: () => {
+        this.messageService.add({ severity: 'error', summary: 'Erro', detail: 'Erro ao excluir casa.' });
+      }
+    });
   }
 
   iniciarCadastro() {
