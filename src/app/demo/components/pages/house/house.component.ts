@@ -9,6 +9,7 @@ import { HouseService } from 'src/app/services/house.service';
 import { House } from 'src/app/model/house';
 import { MessageService } from 'primeng/api';
 import { ToastModule } from 'primeng/toast';
+import { Router } from '@angular/router';
 
 
 @Component({
@@ -53,7 +54,7 @@ export class HouseComponent implements OnInit {
   emailUsuarioGuest: string = '';
   listaDeUsuarios: any[] = [];
 
-  constructor(private fb: FormBuilder, private houseService: HouseService, private messageService: MessageService) {
+  constructor(private fb: FormBuilder, private houseService: HouseService, private messageService: MessageService, private router: Router) {
     this.houseForm = this.fb.group({
       name: ['', Validators.required],
       cep: ['', Validators.required],
@@ -123,6 +124,9 @@ export class HouseComponent implements OnInit {
     this.listaDeUsuarios = casa.users || [];
   }
 
+  navegarParaEquipamentos(casa: any) {
+    this.router.navigate(['pages/equipamentos/', casa.id]);
+  }
   adicionarUsuario() {
     if (this.emailUsuarioGuest && this.casaEditando?.id) {
       this.houseService.addGuest(this.casaEditando.id, this.emailUsuarioGuest).subscribe({
