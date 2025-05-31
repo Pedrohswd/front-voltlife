@@ -127,6 +127,10 @@ export class HouseComponent implements OnInit {
   navegarParaEquipamentos(casa: any) {
     this.router.navigate(['pages/equipamentos/', casa.id]);
   }
+
+  navegarParaRelatorios(casa: any) {
+    this.router.navigate(['pages/relatorio/', casa.id]);
+  }
   adicionarUsuario() {
     if (this.emailUsuarioGuest && this.casaEditando?.id) {
       this.houseService.addGuest(this.casaEditando.id, this.emailUsuarioGuest).subscribe({

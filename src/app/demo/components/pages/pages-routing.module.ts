@@ -2,6 +2,7 @@ import { NgModule } from '@angular/core';
 import { RouterModule } from '@angular/router';
 import { HouseComponent } from './house/house.component';
 import { DeviceComponent } from './device/device.component';
+import { BoardComponent } from './board/board.component';
 
 @NgModule({
     imports: [RouterModule.forChild([
@@ -9,6 +10,7 @@ import { DeviceComponent } from './device/device.component';
         { path: 'crud', data: { breadcrumb: 'Crud' }, loadChildren: () => import('./crud/crud.module').then(m => m.CrudModule) },
         { path: 'casas', data: { breadcrumb: 'Casa' }, loadComponent : () => HouseComponent },
         { path: 'equipamentos/:id', data: { breadcrumb: 'Dispositivos' }, loadComponent : () => DeviceComponent },
+        { path: 'relatorio/:id', data: { breadcrumb: 'Relatórios' }, loadComponent : () => BoardComponent },
         { path: 'empty', data: { breadcrumb: 'Empty' }, loadChildren: () => import('./empty/emptydemo.module').then(m => m.EmptyDemoModule) },
         { path: 'timeline', data: { breadcrumb: 'Timeline' }, loadChildren: () => import('./timeline/timelinedemo.module').then(m => m.TimelineDemoModule) },
         { path: '**', redirectTo: '/notfound' }
