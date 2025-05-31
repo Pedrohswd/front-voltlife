@@ -108,8 +108,8 @@
                             <span>{{ residente.email }}</span>
                             <div *ngIf="residente.role == 'CONVIDADO'">
                                 <div class="flex gap-2 justify-content-end">
-                                    <p-button icon="pi pi-trash" severity="danger" (click)="removerUsuario(residente.email)"
-                                         class="p-button-sm"></p-button>
+                                    <p-button icon="pi pi-trash" severity="danger"
+                                        (click)="removerUsuario(residente.email)" class="p-button-sm"></p-button>
                                 </div>
                             </div>
                         </div>
@@ -129,7 +129,8 @@
         <div *ngIf="!cadastroAtivo" class="grid mb-5">
             <!-- cards existentes -->
             <div class="col-12 md:col-6 lg:col-4" *ngFor="let casa of houses">
-                <p-card [style]="{ width: '100%', minHeight: '350px' }" class="h-full flex flex-column justify-between">
+                <p-card [style]="{ width: '100%', minHeight: '350px', cursor: 'pointer' }"
+                    class="h-full flex flex-column justify-between" (click)="navegarParaEquipamentos(casa)">
 
                     <div class="flex gap-2">
                         <span
@@ -145,10 +146,12 @@
                     <h6>Endereço: {{ casa.street }}, {{ casa.number }} - {{ casa.city }}</h6>
 
                     <!-- Rodapé com botões -->
-                    <div class="flex gap-2 justify-content-end">
-                        <p-button icon="pi pi-pencil" label="Editar" (click)="editarCasa(casa)"
+                    <div class="flex gap-2 justify-content-center">
+                        <p-button icon="pi pi-chart-line" severity="info" label="Relatórios" (click)="navegarParaRelatorios(casa); $event.stopPropagation()"
                             class="p-button-sm"></p-button>
-                        <p-button icon="pi pi-trash" label="Excluir" severity="danger" (click)="excluirCasa(casa)"
+                        <p-button icon="pi pi-pencil" label="Editar" (click)="editarCasa(casa); $event.stopPropagation()"
+                            class="p-button-sm"></p-button>
+                        <p-button icon="pi pi-trash" label="Excluir" severity="danger" (click)="excluirCasa(casa); $event.stopPropagation()"
                             class="p-button-sm"></p-button>
                     </div>
                 </p-card>
