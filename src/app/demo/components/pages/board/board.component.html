@@ -1,8 +1,59 @@
+<div class="grid p-fluid mb-4">
+    <div class="col-12 md:col-4">
+        <label for="aparelhos">Aparelhos</label>
+        <p-multiSelect [options]="aparelhoOptions" [(ngModel)]="filtros.aparelhosSelecionados" optionLabel="label"
+            optionValue="value" placeholder="Selecione os aparelhos" display="chip">
+        </p-multiSelect>
+    </div>
+
+    <div class="col-12 md:col-3">
+        <label for="dataInicial">Data Inicial</label>
+        <p-calendar [(ngModel)]="filtros.dataInicial" dateFormat="dd/mm/yy" [showIcon]="true"
+            placeholder="Escolha a data inicial">
+        </p-calendar>
+    </div>
+
+    <div class="col-12 md:col-3">
+        <label for="dataFinal">Data Final</label>
+        <p-calendar [(ngModel)]="filtros.dataFinal" dateFormat="dd/mm/yy" [showIcon]="true"
+            placeholder="Escolha a data final">
+        </p-calendar>
+    </div>
+
+    <div class="col-12 md:col-2 flex align-items-end">
+        <button pButton type="button" label="Aplicar Filtros" icon="pi pi-filter" class="w-full"
+            (click)="aplicarFiltros()"></button>
+    </div>
+</div>
 <div class="grid p-fluid">
     <div class="col-12">
         <div class="card">
-            <h5>Consumo por Aparelho (kWh)</h5>
-            <p-chart type="bar" [data]="barData" [options]="barOptions"></p-chart>
+            <div class="grid text-center">
+                <div class="col-6 md:col-3">
+                    <div class="surface-card p-3 border-round shadow-1">
+                        <div class="text-2xl font-bold">{{ mediaTemperatura }}</div>
+                        <small class="text-color-secondary">Temperatura Média (°C)</small>
+                    </div>
+                </div>
+                <div class="col-6 md:col-3">
+                    <div class="surface-card p-3 border-round shadow-1">
+                        <div class="text-2xl font-bold">{{ mediaConsumoHora }}</div>
+                        <small class="text-color-secondary">Consumo Médio por Hora (kWh)</small>
+                    </div>
+                </div>
+                <div class="col-6 md:col-3">
+                    <div class="surface-card p-3 border-round shadow-1">
+                        <div class="text-2xl font-bold">{{ mediaUmidade }}</div>
+                        <small class="text-color-secondary">Umidade Média (%)</small>
+                    </div>
+                </div>
+                <div class="col-6 md:col-3">
+                    <div class="surface-card p-3 border-round shadow-1">
+                        <div class="text-2xl font-bold">{{ mediaTensao }}</div>
+                        <small class="text-color-secondary">Tensão Média (V)</small>
+                    </div>
+                </div>
+            </div>
         </div>
     </div>
     <div class="col-12 lg:col-6">
@@ -12,7 +63,7 @@
         </div>
 
         <div class="card flex flex-column align-items-center">
-            <h5 class="text-left w-full">Distribuição de Consumo</h5>
+            <h5 class="text-left w-full">Consumo por aparelho</h5>
             <p-chart type="pie" [data]="pieData" [options]="pieOptions"></p-chart>
         </div>
 
@@ -23,18 +74,18 @@
     </div>
     <div class="col-12 lg:col-6">
         <div class="card">
-            <h5>Variação de Consumo por Período</h5>
-            <p-chart type="bar" [data]="barData" [options]="barOptions"></p-chart>
+            <h5>Consumo Médio por Dia da Semana</h5>
+            <p-chart type="bar" [data]="barDiaSemanaData" [options]="barDiaSemanaOptions"></p-chart>
         </div>
 
         <div class="card flex flex-column align-items-center">
-            <h5 class="text-left w-full">Comparativo entre Aparelhos</h5>
-            <p-chart type="doughnut" [data]="pieData" [options]="pieOptions"></p-chart>
+            <h5 class="text-left w-full">Consumo por Faixa de Horário</h5>
+            <p-chart type="doughnut" [data]="doughnutTimeData" [options]="doughnutTimeOptions"></p-chart>
         </div>
 
-        <div class="card flex flex-column align-items-center">
-            <h5 class="text-left w-full">Resumo Geral</h5>
-            <p-chart type="radar" [data]="radarData" [options]="radarOptions"></p-chart>
+        <div class="card flex flex-column">
+            <h5 class="text-left w-full">Temperatura Média por Dia da Semana</h5>
+            <p-chart type="bar" [data]="tempPorDiaSemanaData" [options]="tempPorDiaSemanaOptions"></p-chart>
         </div>
     </div>
 </div>
