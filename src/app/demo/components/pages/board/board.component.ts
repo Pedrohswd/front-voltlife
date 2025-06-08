@@ -8,6 +8,7 @@ import { ButtonModule } from 'primeng/button';
 import { LayoutService } from 'src/app/layout/service/app.layout.service';
 import { HouseService } from 'src/app/services/house.service';
 import { FormsModule } from '@angular/forms';
+import { ActivatedRoute } from '@angular/router';
 
 @Component({
   selector: 'app-board',
@@ -57,7 +58,8 @@ export class BoardComponent implements OnInit, OnDestroy {
 
   constructor(
     private layoutService: LayoutService,
-    private houseService: HouseService
+    private houseService: HouseService,
+    private route: ActivatedRoute,
   ) {
     this.subscription = this.layoutService.configUpdate$
       .pipe(debounceTime(25))
@@ -73,7 +75,7 @@ export class BoardComponent implements OnInit, OnDestroy {
   }
 
   fetchReportData() {
-    this.houseService.getReportsByHouseId(1).subscribe((data) => {
+    this.houseService.getReportsByHouseId(+this.route.snapshot.paramMap.get('id')!).subscribe((data) => {
       const dadosFiltrados = data.filter(d => {
         const dataRegistro = new Date(d.requestAt);
         console.log('Selecionados:', this.filtros.aparelhosSelecionados);
