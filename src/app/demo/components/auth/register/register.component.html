@@ -1,26 +1,26 @@
 <div class="surface-ground h-screen w-screen flex align-items-center justify-content-center"
     [ngClass]="{'p-input-filled': filledInput}">
     <div class="surface-card py-7 px-5 sm:px-7 shadow-2 flex flex-column w-11 sm:w-30rem" style="border-radius:14px">
-        <h1 class="font-bold text-2xl mt-0 mb-2">VERONA</h1>
-        <p class="text-color-secondary mb-4">Welcome to the <strong>Verona Community</strong>, where the magic happens,
-            sign up to continue.</p>
+        <img src="assets/layout/images/VoltLife.svg" alt="Logo" class="mb-4 mx-auto" style="width: 150px; height: 150px;" />
+        <h1 class="font-bold text-2xl mt-0 mb-2"></h1>
+        <p class="text-color-secondary mb-4">Cadastre-se para continuar.</p>
         <form [formGroup]="userForm">
-            <span class="p-input-icon-left mb-4">
+            <span class="p-input-icon-left mb-4 w-full">
                 <i class="pi pi-user"></i>
                 <input type="text" pInputText placeholder="Nome Completo" class="w-full" formControlName="name">
             </span>
 
-            <span class="p-input-icon-left mb-4">
+            <span class="p-input-icon-left mb-4 w-full">
                 <i class="pi pi-user"></i>
                 <input type="text" pInputText placeholder="Email" class="w-full" formControlName="email">
             </span>
 
-            <span class="p-input-icon-left mb-4">
+            <span class="p-input-icon-left mb-4 w-full">
                 <i class="pi pi-calendar"></i>
                 <input type="date" pInputText placeholder="Data de Nascimento" class="w-full" formControlName="date">
             </span>
 
-            <span class="p-input-icon-left mb-4">
+            <span class="p-input-icon-left mb-4 w-full">
                 <i class="pi pi-key z-2"></i>
                 <p-password id="password" placeholder="Password" styleClass="w-full"
                     [inputStyle]="{paddingLeft: '2.5rem'}" inputStyleClass="w-full" [toggleMask]="true" formControlName="password"></p-password>
@@ -28,7 +28,7 @@
         </form>
         <button (click)="cadastre()" pButton pRipple label="Cadastre-se " class="mb-4"></button>
 
-        <span (click)="navigateTo('./auth/login')" class="text-color-secondary text-center mb-4">or sign up with below</span>
+        <span (click)="navigateTo('./auth/login')" class="text-color-secondary text-center mb-4">Login</span>
     </div>
 </div>
 
