@@ -79,9 +79,10 @@ export class AuthService {
   logout(): void {
     // Limpa os dados armazenados
     localStorage.removeItem('currentUser');
+    localStorage.removeItem('token')
     this.currentUserSubject.next(null);
     // Redireciona para a página de login após logout
-    this.router.navigate(['/login']);
+    this.router.navigate(['/auth/login']);
   }
 
   // Verifica se o usuário tem uma role específica
