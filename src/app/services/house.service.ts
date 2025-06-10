@@ -9,12 +9,12 @@ import { AuthService } from './auth.service';
   providedIn: 'root'
 })
 export class HouseService {
-  
+
   private apiUrl = `${API_CONFIG.baseUrl}/api/houses`;
 
   constructor(private http: HttpClient,
     private authService: AuthService
-  ) {}
+  ) { }
 
   create(house: House): Observable<House> {
     const userId = this.authService.getUserId()
@@ -46,5 +46,9 @@ export class HouseService {
 
   delete(id: number): Observable<void> {
     return this.http.delete<void>(`${this.apiUrl}/${id}`);
+  }
+
+  getReportsByHouseId(houseId: number): Observable<any[]> {
+    return this.http.get<any[]>(`${this.apiUrl}/report/house/${houseId}`);
   }
 }
