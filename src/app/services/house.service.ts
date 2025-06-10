@@ -9,7 +9,7 @@ import { AuthService } from './auth.service';
   providedIn: 'root'
 })
 export class HouseService {
-
+  
   private apiUrl = `${API_CONFIG.baseUrl}/api/houses`;
 
   constructor(private http: HttpClient,
