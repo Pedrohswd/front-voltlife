@@ -3,14 +3,14 @@
         <div *ngIf="!cadastroAtivo"
             class="relative overflow-hidden h-20rem bg-primary flex flex-column align-items-center justify-content-center border-round mb-8">
             <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1440 320" class="absolute w-full top-0 left-0">
-                <path fill="var(--primary-600)" fill-opacity="1"
+                <path fill="#121D3A" fill-opacity="1"
                     d="M0,64L48,90.7C96,117,192,171,288,208C384,245,480,267,576,256C672,245,768,203,864,165.3C960,128,1056,96,1152,74.7C1248,53,1344,43,1392,37.3L1440,32L1440,0L1392,0C1344,0,1248,0,1152,0C1056,0,960,0,864,0C768,0,672,0,576,0C480,0,384,0,288,0C192,0,96,0,48,0L0,0Z">
                 </path>
             </svg>
-            <div class="font-bold mb-5 text-4xl z-1">Suas Residencias</div>
+            <div class="font-bold mb-5 text-4xl z-1">Suas Residências</div>
             <span class="p-input-icon-left w-9 md:w-6">
                 <i class="pi pi-search"></i>
-                <input type="text" pInputText placeholder="Search" style="border-radius:2rem" class="w-full" />
+                <input type="text" pInputText placeholder="Pesquisar" style="border-radius:2rem" class="w-full" />
             </span>
         </div>
 
@@ -32,7 +32,7 @@
                 <div *ngIf="cadastroAtivo"
                     class="relative overflow-hidden h-20rem bg-primary flex flex-column align-items-center justify-content-center border-round mb-8">
                     <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1440 320" class="absolute w-full top-0 left-0">
-                        <path fill="var(--primary-600)" fill-opacity="1"
+                        <path fill="#121D3A" fill-opacity="1"
                             d="M0,64L48,90.7C96,117,192,171,288,208C384,245,480,267,576,256C672,245,768,203,864,165.3C960,128,1056,96,1152,74.7C1248,53,1344,43,1392,37.3L1440,32L1440,0L1392,0C1344,0,1248,0,1152,0C1056,0,960,0,864,0C768,0,672,0,576,0C480,0,384,0,288,0C192,0,96,0,48,0L0,0Z">
                         </path>
                     </svg>
@@ -40,7 +40,7 @@
                     <span class="p-input-icon-left w-9 md:w-6">
                         <i class="pi pi-home"></i>
                         <input id="name" type="text" pInputText formControlName="name" placeholder="Nome"
-                            class="w-full border-round-3xl" />
+                            style="border-radius:2rem" class="w-full" />
                     </span>
                 </div>
 
@@ -50,41 +50,54 @@
                     <i class="pi pi-map-marker text-2xl text-primary"></i> Endereço
                 </h4>
 
-                <div class="grid formgrid">
-                    <div class="field col-12 md:col-4">
-                        <label for="cep">CEP:</label>
-                        <input id="cep" type="text" pInputText formControlName="cep" placeholder="CEP" />
-                    </div>
-                    <div class="field col-12 md:col-5">
-                        <label for="street">Rua:</label>
-                        <input id="street" type="text" pInputText formControlName="street" placeholder="Rua/Avenida" />
-                    </div>
+                
+                <div class="grid formgrid gap-4 w-full" >
                     <div class="field col-12 md:col-3">
+                        <label for="cep">CEP:</label>
+                        <input id="cep" type="text" pInputText formControlName="cep" placeholder="CEP"
+                            style="border-radius:2rem" class="w-full" />
+                    </div>
+                    <div class="field col-12 md:col-6">
+                        <label for="street">Rua:</label>
+                        <input id="street" type="text" pInputText formControlName="street" placeholder="Rua/Avenida"
+                            style="border-radius:2rem" class="w-full" />
+                    </div>
+                    <div class="field col-12 md:col-2">
                         <label for="number">Número:</label>
-                        <input id="number" type="text" pInputText formControlName="number" placeholder="Número" />
+                        <input id="number" type="text" pInputText formControlName="number" placeholder="Número"
+                            style="border-radius:2rem" class="w-full" />
                     </div>
 
-                    <div class="field col-12 md:col-4">
+                    <div class="field col-12 md:col-3">
                         <label for="district">Bairro:</label>
                         <input id="district" type="text" pInputText formControlName="district"
-                            placeholder="Bairro/Setor" />
+                            placeholder="Bairro/Setor" style="border-radius:2rem" class="w-full" />
                     </div>
-                    <div class="field col-12 md:col-4">
+                    <div class="field col-12 md:col-3">
                         <label for="city">Cidade:</label>
-                        <input id="city" type="text" pInputText formControlName="city" placeholder="Cidade" />
+                        <input id="city" type="text" pInputText formControlName="city" placeholder="Cidade"
+                            style="border-radius:2rem" class="w-full" />
                     </div>
-                    <div class="field col-6 md:col-2">
+                    <div class="field col-12 md:col-3">
                         <label for="state">Estado:</label>
-                        <input id="state" type="text" pInputText formControlName="state" placeholder="Estado" />
+                        <input id="state" type="text" pInputText formControlName="state" placeholder="Estado"
+                            style="border-radius:2rem" class="w-full" />
                     </div>
-                    <div class="field col-6 md:col-2">
+                    <div class="field col-12 md:col-2">
                         <label for="country">País:</label>
-                        <input id="country" type="text" pInputText formControlName="country" placeholder="País" />
+                        <input id="country" type="text" pInputText formControlName="country" placeholder="País"
+                            style="border-radius:2rem" class="w-full" />
                     </div>
                 </div>
             </form>
 
             <div *ngIf="modoEdicao">
+                <!-- RESIDENTES -->
+                <h4 class="mt-6 flex align-items-center gap-2">
+                    <i class="pi pi-users text-2xl text-primary"></i> Residentes
+                </h4>
+
+
                 <!-- ADICIONAR CONVIDADO -->
                 <div class="field mt-5">
                     <label for="userEmail">Adicionar Convidado:</label>
@@ -97,10 +110,6 @@
                     </div>
                 </div>
 
-                <!-- RESIDENTES -->
-                <h4 class="mt-6 flex align-items-center gap-2">
-                    <i class="pi pi-users text-2xl text-primary"></i> Residentes
-                </h4>
                 <div class="grid mt-3">
                     <div class="col-12 md:col-3" *ngFor="let residente of listaDeUsuarios">
                         <div class="flex align-items-center gap-2 p-2 border-round surface-100">
@@ -129,7 +138,7 @@
         <div *ngIf="!cadastroAtivo" class="grid mb-5">
             <!-- cards existentes -->
             <div class="col-12 md:col-6 lg:col-4" *ngFor="let casa of houses">
-                <p-card [style]="{ width: '100%', minHeight: '350px', cursor: 'pointer' }"
+                <p-card [style]="{ width: '100%', minHeight: '350px', cursor: 'pointer',  boxShadow: '0 8px 20px rgba(0, 0, 0, 0.3)' }"
                     class="h-full flex flex-column justify-between" (click)="navegarParaEquipamentos(casa)">
 
                     <div class="flex gap-2">
@@ -147,12 +156,13 @@
 
                     <!-- Rodapé com botões -->
                     <div class="flex gap-2 justify-content-center">
-                        <p-button icon="pi pi-chart-line" severity="info" label="Relatórios" (click)="navegarParaRelatorios(casa); $event.stopPropagation()"
+                        <p-button icon="pi pi-chart-line" severity="info" label="Relatórios"
+                            (click)="navegarParaRelatorios(casa); $event.stopPropagation()"
                             class="p-button-sm"></p-button>
-                        <p-button icon="pi pi-pencil" label="Editar" (click)="editarCasa(casa); $event.stopPropagation()"
-                            class="p-button-sm"></p-button>
-                        <p-button icon="pi pi-trash" label="Excluir" severity="danger" (click)="excluirCasa(casa); $event.stopPropagation()"
-                            class="p-button-sm"></p-button>
+                        <p-button icon="pi pi-pencil" label="Editar"
+                            (click)="editarCasa(casa); $event.stopPropagation()" class="p-button-sm"></p-button>
+                        <p-button icon="pi pi-trash" label="Excluir" severity="danger"
+                            (click)="excluirCasa(casa); $event.stopPropagation()" class="p-button-sm"></p-button>
                     </div>
                 </p-card>
             </div>

@@ -5,16 +5,18 @@
             <p-toolbar styleClass="mb-4">
                 <ng-template pTemplate="left">
                     <div class="my-2">
-                        <button pButton label="Novo Dispositivo" icon="pi pi-plus" class="p-button-success mr-2"
+                        <button pButton label="Novo Dispositivo" icon="pi pi-plus" style="border-radius:2rem" class="p-button-primary mr-2"
                             (click)="abrirNovoDevice()"></button>
-                        <button pButton label="Excluir Selecionados" icon="pi pi-trash" class="p-button-danger"
+                        <button pButton label="Excluir Selecionados" icon="pi pi-trash" style="border-radius:2rem" class="p-button-danger"
                             (click)="excluirSelecionados()"
                             [disabled]="!devicesSelecionados || !devicesSelecionados.length"></button>
                     </div>
                 </ng-template>
                 <ng-template pTemplate="right">
-                    <button pButton label="Exportar CSV" icon="pi pi-upload" class="p-button-help"
-                        (click)="dt.exportCSV()"></button>
+                    <span class="p-input-icon-left">
+                        <i class="pi pi-search"></i>
+                        <input type="text" pInputText placeholder="Pesquisar" style="border-radius:2rem" class="w-full" />
+                    </span>
                 </ng-template>
             </p-toolbar>
 
@@ -49,7 +51,7 @@
                         <td>{{ device.annualConsumption }}</td>
                         <td>{{ device.category }}</td>
                         <td>
-                            <button pButton icon="pi pi-pencil" class="p-button-rounded p-button-success mr-2"
+                            <button pButton icon="pi pi-pencil" class="p-button-rounded p-button-primary mr-2"
                                 (click)="editarDevice(device)"></button>
                             <button pButton icon="pi pi-trash" class="p-button-rounded p-button-danger"
                                 (click)="confirmarExclusao(device)"></button>
@@ -95,9 +97,9 @@
                 </div>
             </form>
             <ng-template pTemplate="footer">
-                <button pButton label="Cancelar" icon="pi pi-times" class="p-button-text"
+                <button pButton label="Cancelar" icon="pi pi-times" class="p-button-rounded p-button-primary mr-2"
                     (click)="fecharDialog()"></button>
-                <button pButton label="Salvar" icon="pi pi-check" class="p-button-text"
+                <button pButton label="Salvar" icon="pi pi-check" class="p-button-rounded p-button-primary mr-2"
                     (click)="salvarDevice()"></button>
             </ng-template>
         </p-dialog>
@@ -108,9 +110,9 @@
                 <span *ngIf="device">Tem certeza que deseja excluir <b>{{device.name}}</b>?</span>
             </div>
             <ng-template pTemplate="footer">
-                <button pButton icon="pi pi-times" class="p-button-text" label="Não"
+                <button pButton icon="pi pi-times" class="p-button-rounded p-button-primary mr-2" label="Não"
                     (click)="deleteDeviceDialog = false"></button>
-                <button pButton icon="pi pi-check" class="p-button-text" label="Sim"
+                <button pButton icon="pi pi-check" class="p-button-rounded p-button-primary mr-2" label="Sim"
                     (click)="confirmarDeleteDevice()"></button>
             </ng-template>
         </p-dialog>
@@ -121,9 +123,9 @@
                 <span>Tem certeza que deseja excluir os dispositivos selecionados?</span>
             </div>
             <ng-template pTemplate="footer">
-                <button pButton icon="pi pi-times" class="p-button-text" label="Não"
+                <button pButton icon="pi pi-times" class="p-button-rounded p-button-primary mr-2" label="Não"
                     (click)="deleteDevicesDialog = false"></button>
-                <button pButton icon="pi pi-check" class="p-button-text" label="Sim"
+                <button pButton icon="pi pi-check" class="p-button-rounded p-button-primary mr-2" label="Sim"
                     (click)="confirmarDeleteSelecionados()"></button>
             </ng-template>
         </p-dialog>
