@@ -49,7 +49,6 @@
                 <h4 class="flex align-items-center gap-2 mb-4">
                     <i class="pi pi-map-marker text-2xl text-primary"></i> Endereço
                 </h4>
-
                 
                 <div class="grid formgrid gap-4 w-full" >
                     <div class="field col-12 md:col-3">
@@ -97,7 +96,6 @@
                     <i class="pi pi-users text-2xl text-primary"></i> Residentes
                 </h4>
 
-
                 <!-- ADICIONAR CONVIDADO -->
                 <div class="field mt-5">
                     <label for="userEmail">Adicionar Convidado:</label>
@@ -140,7 +138,6 @@
             <div class="col-12 md:col-6 lg:col-4" *ngFor="let casa of houses">
                 <p-card [style]="{ width: '100%', minHeight: '350px', cursor: 'pointer',  boxShadow: '0 8px 20px rgba(0, 0, 0, 0.3)' }"
                     class="h-full flex flex-column justify-between" (click)="navegarParaEquipamentos(casa)">
-
                     <div class="flex gap-2">
                         <span
                             class="inline-flex align-items-center justify-content-center border-circle w-5rem h-5rem bg-primary-100 mb-5">
