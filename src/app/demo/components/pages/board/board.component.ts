@@ -9,11 +9,14 @@ import { LayoutService } from 'src/app/layout/service/app.layout.service';
 import { HouseService } from 'src/app/services/house.service';
 import { FormsModule } from '@angular/forms';
 import { ActivatedRoute } from '@angular/router';
+import { Device } from 'src/app/model/device';
+import { DeviceService } from 'src/app/services/device.service';
+import { TableModule } from 'primeng/table';
 
 @Component({
   selector: 'app-board',
   standalone: true,
-  imports: [CommonModule, ChartModule, CalendarModule, MultiSelectModule, ButtonModule, FormsModule],
+  imports: [CommonModule, ChartModule, CalendarModule, MultiSelectModule, ButtonModule, FormsModule, TableModule],
   templateUrl: './board.component.html',
   styleUrl: './board.component.scss'
 })
@@ -45,6 +48,13 @@ export class BoardComponent implements OnInit, OnDestroy {
   mediaConsumoHora = 0;
   mediaUmidade = 0;
   mediaTensao = 0;
+  comparativoConsumo: {
+    aparelho: string;
+    mes: string;
+    consumoReal: number;
+    consumoEsperado: number;
+    situacao: 'adequado' | 'Acima. Verifique!' | 'abaixo';
+  }[] = [];
 
   // Filtros
   filtros = {
@@ -53,6 +63,8 @@ export class BoardComponent implements OnInit, OnDestroy {
     dataFinal: null as Date | null
   };
   aparelhoOptions: { label: string; value: string }[] = [];
+  devices: Device[] = []
+
 
   subscription: Subscription;
 
@@ -60,6 +72,7 @@ export class BoardComponent implements OnInit, OnDestroy {
     private layoutService: LayoutService,
     private houseService: HouseService,
     private route: ActivatedRoute,
+    private deviceService: DeviceService
   ) {
     this.subscription = this.layoutService.configUpdate$
       .pipe(debounceTime(25))
@@ -67,28 +80,25 @@ export class BoardComponent implements OnInit, OnDestroy {
   }
 
   ngOnInit() {
-    this.fetchReportData();
+    this.aplicarFiltros()
   }
 
   aplicarFiltros() {
-    this.fetchReportData();
+    this.deviceService.getByHouse(+this.route.snapshot.paramMap.get('id')!).subscribe(devices => {
+      this.devices = devices
+      this.fetchReportData(); // passa os dados INMETRO junto
+    });
   }
 
   fetchReportData() {
     this.houseService.getReportsByHouseId(+this.route.snapshot.paramMap.get('id')!).subscribe((data) => {
       const dadosFiltrados = data.filter(d => {
         const dataRegistro = new Date(d.requestAt);
-        console.log('Selecionados:', this.filtros.aparelhosSelecionados);
-        console.log('Dispositivo exemplo:', d.idDsp);
         const aparelhoValido = !this.filtros.aparelhosSelecionados.length || this.filtros.aparelhosSelecionados.includes(d.idDsp);
         const dataInicialValida = !this.filtros.dataInicial || dataRegistro >= this.filtros.dataInicial;
         const dataFinalValida = !this.filtros.dataFinal || dataRegistro <= this.filtros.dataFinal;
         return aparelhoValido && dataInicialValida && dataFinalValida;
       });
-
-
-      console.log(data)
-      console.log(dadosFiltrados)
 
       const labels = dadosFiltrados.map(d => new Date(d.requestAt).toLocaleTimeString());
       const paData = dadosFiltrados.map(d => d.consumoHora);
@@ -130,6 +140,39 @@ export class BoardComponent implements OnInit, OnDestroy {
         consumoPorDiaSemana[nomes[diaSemana]].push(d.consumoHora);
         temperaturaPorDiaSemana[nomes[diaSemana]].push(d.temperatura);
       });
+
+      // Análise comparativa: consumo real x consumo esperado
+      const consumoMensalRealPorDispositivo: { [idDsp: string]: number } = {};
+      dadosFiltrados.forEach((d) => {
+        const mesAno = new Date(d.requestAt).toISOString().slice(0, 7); // '2025-05'
+        const key = `${d.idDsp};${mesAno}`;
+        consumoMensalRealPorDispositivo[key] = (consumoMensalRealPorDispositivo[key] || 0) + d.consumoHora;
+      });
+
+      const comparativoConsumo: {
+        aparelho: string;
+        mes: string;
+        consumoReal: number;
+        consumoEsperado: number;
+        situacao: 'adequado' | 'Acima. Verifique!' | 'abaixo';
+      }[] = [];
+
+      for (const key in consumoMensalRealPorDispositivo) {
+        const [idDsp, mes] = key.split(';');
+        const consumoReal = +consumoMensalRealPorDispositivo[key].toFixed(2);
+        console.log(this.devices)
+        const device = this.devices.find(d => d.code === idDsp);
+        const consumoEsperado = +(device?.monthlyConsumption ?? 0);
+
+        let situacao: 'adequado' | 'Acima. Verifique!' | 'abaixo' = 'adequado';
+        if (consumoReal > consumoEsperado * 1.4) situacao = 'Acima. Verifique!';
+        else if (consumoReal < consumoEsperado * 0.7) situacao = 'abaixo';
+        else situacao = 'adequado'
+
+        comparativoConsumo.push({ aparelho: device?.name ?? idDsp, mes, consumoReal, consumoEsperado, situacao });
+      }
+
+      this.comparativoConsumo = comparativoConsumo;
 
       this.aparelhoOptions = Object.keys(consumoPorAparelho).map(key => ({
         label: key,

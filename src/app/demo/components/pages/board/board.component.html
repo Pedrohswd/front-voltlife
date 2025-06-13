@@ -88,4 +88,38 @@
             <p-chart type="bar" [data]="tempPorDiaSemanaData" [options]="tempPorDiaSemanaOptions"></p-chart>
         </div>
     </div>
+    <div class="col-12">
+        <div class="card">
+            <h5>Comparativo: Consumo Real vs Esperado (por Mês)</h5>
+            <p-table [value]="comparativoConsumo">
+                <ng-template pTemplate="header">
+                    <tr>
+                        <th>Dispositivo</th>
+                        <th>Ano-Mês</th>
+                        <th>Consumo Real (kWh)</th>
+                        <th>Consumo Esperado (kWh)</th>
+                        <th>Situação de Consumo</th>
+                    </tr>
+                </ng-template>
+                <ng-template pTemplate="body" let-row>
+                    <tr>
+                        <td>{{ row.aparelho }}</td>
+                        <td>{{ row.mes }}</td>
+                        <td>{{ row.consumoReal }}</td>
+                        <td>{{ row.consumoEsperado }}</td>
+                        <td>
+                            <span class="px-2 py-1 border-round text-sm font-medium" [ngClass]="{
+                            'bg-green-100 text-green-700': row.situacao === 'adequado',
+                            'bg-yellow-100 text-yellow-800': row.situacao === 'abaixo',
+                            'bg-red-100 text-red-800': row.situacao === 'Acima. Verifique!'
+                          }">
+                                {{ row.situacao | titlecase }}
+                            </span>
+                        </td>
+                    </tr>
+                </ng-template>
+            </p-table>
+        </div>
+    </div>
+
 </div>
