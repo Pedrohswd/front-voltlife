@@ -5,6 +5,8 @@ import { ChartModule } from 'primeng/chart';
 import { CalendarModule } from 'primeng/calendar';
 import { MultiSelectModule } from 'primeng/multiselect';
 import { ButtonModule } from 'primeng/button';
+import { TooltipModule } from 'primeng/tooltip';
+import { OverlayPanelModule } from 'primeng/overlaypanel';
 import { LayoutService } from 'src/app/layout/service/app.layout.service';
 import { HouseService } from 'src/app/services/house.service';
 import { FormsModule } from '@angular/forms';
@@ -16,7 +18,7 @@ import { TableModule } from 'primeng/table';
 @Component({
   selector: 'app-board',
   standalone: true,
-  imports: [CommonModule, ChartModule, CalendarModule, MultiSelectModule, ButtonModule, FormsModule, TableModule],
+  imports: [CommonModule, ChartModule, CalendarModule, MultiSelectModule, ButtonModule, FormsModule, TableModule, TooltipModule, OverlayPanelModule],
   templateUrl: './board.component.html',
   styleUrl: './board.component.scss'
 })
@@ -338,4 +340,10 @@ export class BoardComponent implements OnInit, OnDestroy {
       this.subscription.unsubscribe();
     }
   }
+
+  getZoomUrl(row: { aparelho: string }): string {
+    const query = encodeURIComponent(row.aparelho ?? 'eletrodomestico');
+    return `https://www.zoom.com.br/search?q=${query}`;
+  }
+
 }

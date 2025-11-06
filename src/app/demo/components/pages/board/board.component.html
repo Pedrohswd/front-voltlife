@@ -99,6 +99,17 @@
                         <th>Consumo Real (kWh)</th>
                         <th>Consumo Esperado (kWh)</th>
                         <th>Situação de Consumo</th>
+                        <th>
+                            <span class="flex align-items-center">
+                                <span class="mr-2">Similares no ZOOM</span>
+                                <button pButton type="button" class="p-button-rounded p-button-text p-button-sm" icon="pi pi-info-circle" (click)="opZoomInfo.toggle($event)"></button>
+                                <p-overlayPanel #opZoomInfo [showCloseIcon]="true" [dismissable]="true">
+                                    <div style="max-width: 340px; line-height: 1.4;">
+                                        Quando o aparelho é classificado com consumo maior que o esperado, isso pode indicar que ele está antigo ou não é ideal para o tipo de uso e consequentemente está gastando mais energia. Esta coluna exibe um botão de sugestão que redireciona ao site Zoom, facilitando a comparação de modelos mais novos que podem ajudar a reduzir sua conta de luz.
+                                    </div>
+                                </p-overlayPanel>
+                            </span>
+                        </th>
                     </tr>
                 </ng-template>
                 <ng-template pTemplate="body" let-row>
@@ -115,6 +126,18 @@
                           }">
                                 {{ row.situacao | titlecase }}
                             </span>
+                        </td>
+                        <td>
+                            <a *ngIf="row.situacao === 'Acima. Verifique!'"
+                               pButton
+                               class="p-button-sm p-button-primary"
+                               icon="pi pi-external-link"
+                               pTooltip="Ver sugestões de um novo aparelho no Zoom"
+                               tooltipPosition="top"
+                               [href]="getZoomUrl(row)"
+                               target="_blank"
+                               rel="noopener noreferrer">
+                            </a>
                         </td>
                     </tr>
                 </ng-template>
