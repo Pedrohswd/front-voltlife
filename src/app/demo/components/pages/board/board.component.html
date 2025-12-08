@@ -1,0 +1,157 @@
+<div class="grid p-fluid mb-4">
+    <div class="col-12 md:col-4">
+        <label for="aparelhos">Aparelhos</label>
+        <p-multiSelect [options]="aparelhoOptions" [(ngModel)]="filtros.aparelhosSelecionados" optionLabel="label"
+            optionValue="value" placeholder="Selecione os aparelhos" display="chip">
+        </p-multiSelect>
+    </div>
+
+    <div class="col-12 md:col-3">
+        <label for="dataInicial">Data Inicial</label>
+        <p-calendar [(ngModel)]="filtros.dataInicial" dateFormat="dd/mm/yy" [showIcon]="true"
+            placeholder="Escolha a data inicial">
+        </p-calendar>
+    </div>
+
+    <div class="col-12 md:col-3">
+        <label for="dataFinal">Data Final</label>
+        <p-calendar [(ngModel)]="filtros.dataFinal" dateFormat="dd/mm/yy" [showIcon]="true"
+            placeholder="Escolha a data final">
+        </p-calendar>
+    </div>
+
+    <div class="col-12 md:col-2 flex align-items-end">
+        <button pButton type="button" label="Aplicar Filtros" icon="pi pi-filter" class="w-full"
+            (click)="aplicarFiltros()"></button>
+    </div>
+</div>
+<div class="grid p-fluid">
+    <div class="col-12">
+        <div class="card">
+            <div class="grid text-center">
+                <div class="col-6 md:col-3">
+                    <div class="surface-card p-3 border-round shadow-1">
+                        <div class="text-2xl font-bold">{{ mediaTemperatura }}</div>
+                        <small class="text-color-secondary">Temperatura Média (°C)</small>
+                    </div>
+                </div>
+                <div class="col-6 md:col-3">
+                    <div class="surface-card p-3 border-round shadow-1">
+                        <div class="text-2xl font-bold">{{ mediaConsumoHora }}</div>
+                        <small class="text-color-secondary">Consumo Médio por Hora (kWh)</small>
+                    </div>
+                </div>
+                <div class="col-6 md:col-3">
+                    <div class="surface-card p-3 border-round shadow-1">
+                        <div class="text-2xl font-bold">{{ mediaUmidade }}</div>
+                        <small class="text-color-secondary">Umidade Média (%)</small>
+                    </div>
+                </div>
+                <div class="col-6 md:col-3">
+                    <div class="surface-card p-3 border-round shadow-1">
+                        <div class="text-2xl font-bold">{{ mediaTensao }}</div>
+                        <small class="text-color-secondary">Tensão Média (V)</small>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    <div class="col-12 lg:col-6">
+        <div class="card">
+            <h5>Consumo ao Longo do Tempo</h5>
+            <p-chart type="line" [data]="lineData" [options]="lineOptions"></p-chart>
+        </div>
+
+        <div class="card flex flex-column align-items-center">
+            <h5 class="text-left w-full">Consumo por aparelho</h5>
+            <p-chart type="pie" [data]="pieData" [options]="pieOptions"></p-chart>
+        </div>
+
+        <div class="card flex flex-column align-items-center">
+            <h5 class="text-left w-full">Consumo vs Condição Climática</h5>
+            <p-chart type="polarArea" [data]="polarData" [options]="polarOptions"></p-chart>
+        </div>
+    </div>
+    <div class="col-12 lg:col-6">
+        <div class="card">
+            <h5>Consumo Médio por Dia da Semana</h5>
+            <p-chart type="bar" [data]="barDiaSemanaData" [options]="barDiaSemanaOptions"></p-chart>
+        </div>
+
+        <div class="card flex flex-column align-items-center">
+            <h5 class="text-left w-full">Consumo por Faixa de Horário</h5>
+            <p-chart type="doughnut" [data]="doughnutTimeData" [options]="doughnutTimeOptions"></p-chart>
+        </div>
+
+        <div class="card flex flex-column">
+            <h5 class="text-left w-full">Temperatura Média por Dia da Semana</h5>
+            <p-chart type="bar" [data]="tempPorDiaSemanaData" [options]="tempPorDiaSemanaOptions"></p-chart>
+        </div>
+    </div>
+    <div class="col-12">
+        <div class="card">
+            <h5>Previsão de Consumo Semanal</h5>
+            <p-chart *ngIf="previsaoSemanalData" type="line" [data]="previsaoSemanalData" [options]="previsaoSemanalOptions"></p-chart>
+            <div *ngIf="!previsaoSemanalData" class="text-center p-4">
+                <p class="text-color-secondary">Carregando dados de previsão...</p>
+            </div>
+        </div>
+    </div>
+    <div class="col-12">
+        <div class="card">
+            <h5>Comparativo: Consumo Real vs Esperado (por Mês)</h5>
+            <p-table [value]="comparativoConsumo">
+                <ng-template pTemplate="header">
+                    <tr>
+                        <th>Dispositivo</th>
+                        <th>Ano-Mês</th>
+                        <th>Consumo Real (kWh)</th>
+                        <th>Consumo Esperado (kWh)</th>
+                        <th>Situação de Consumo</th>
+                        <th>
+                            <span class="flex align-items-center">
+                                <span class="mr-2">Similares no ZOOM</span>
+                                <button pButton type="button" class="p-button-rounded p-button-text p-button-sm" icon="pi pi-info-circle" (click)="opZoomInfo.toggle($event)"></button>
+                                <p-overlayPanel #opZoomInfo [showCloseIcon]="true" [dismissable]="true">
+                                    <div style="max-width: 340px; line-height: 1.4;">
+                                        Quando o aparelho é classificado com consumo maior que o esperado, isso pode indicar que ele está antigo ou não é ideal para o tipo de uso e consequentemente está gastando mais energia. Esta coluna exibe um botão de sugestão que redireciona ao site Zoom, facilitando a comparação de modelos mais novos que podem ajudar a reduzir sua conta de luz.
+                                    </div>
+                                </p-overlayPanel>
+                            </span>
+                        </th>
+                    </tr>
+                </ng-template>
+                <ng-template pTemplate="body" let-row>
+                    <tr>
+                        <td>{{ row.aparelho }}</td>
+                        <td>{{ row.mes }}</td>
+                        <td>{{ row.consumoReal }}</td>
+                        <td>{{ row.consumoEsperado }}</td>
+                        <td>
+                            <span class="px-2 py-1 border-round text-sm font-medium" [ngClass]="{
+                            'bg-green-100 text-green-700': row.situacao === 'adequado',
+                            'bg-yellow-100 text-yellow-800': row.situacao === 'abaixo',
+                            'bg-red-100 text-red-800': row.situacao === 'Acima. Verifique!'
+                          }">
+                                {{ row.situacao | titlecase }}
+                            </span>
+                        </td>
+                        <td>
+                            <a *ngIf="row.situacao === 'Acima. Verifique!'"
+                               pButton
+                               class="p-button-sm p-button-primary"
+                               icon="pi pi-external-link"
+                               pTooltip="Ver sugestões de um novo aparelho no Zoom"
+                               tooltipPosition="top"
+                               [href]="getZoomUrl(row)"
+                               target="_blank"
+                               rel="noopener noreferrer">
+                            </a>
+                        </td>
+                    </tr>
+                </ng-template>
+            </p-table>
+        </div>
+    </div>
+
+</div>

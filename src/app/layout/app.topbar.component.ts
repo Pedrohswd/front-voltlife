@@ -1,6 +1,7 @@
 import { Component, ElementRef, ViewChild } from '@angular/core';
 import { MenuItem } from 'primeng/api';
 import { LayoutService } from "./service/app.layout.service";
+import { AuthService } from '../services/auth.service';
 
 @Component({
     selector: 'app-topbar',
@@ -16,7 +17,7 @@ export class AppTopBarComponent {
 
     searchActive: boolean = false;
 
-    constructor(public layoutService: LayoutService) {}
+    constructor(public layoutService: LayoutService, private authService: AuthService) { }
 
     onMenuButtonClick() {
         this.layoutService.onMenuToggle();
@@ -38,6 +39,10 @@ export class AppTopBarComponent {
         event.preventDefault();
     }
 
+    signOut() {
+        this.authService.logout()
+    }
+
     get layoutTheme(): string {
         return this.layoutService.config().layoutTheme;
     }
@@ -47,9 +52,9 @@ export class AppTopBarComponent {
     }
 
     get logo(): string {
-        const path = 'assets/layout/images/logo-';
-        const logo = (this.layoutTheme === 'primaryColor'  && !(this.layoutService.config().theme  == "yellow")) ? 'light.png' : (this.colorScheme === 'light' ? 'dark.png' : 'light.png');
-        return path + logo;
+        const path = 'assets/layout/images/VoltLife.svg';
+        // const logo = (this.layoutTheme === 'primaryColor'  && !(this.layoutService.config().theme  == "yellow")) ? 'light.png' : (this.colorScheme === 'light' ? 'dark.png' : 'light.png');
+        return path;
     }
 
     get tabs(): MenuItem[] {
