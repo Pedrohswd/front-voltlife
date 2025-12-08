@@ -90,6 +90,15 @@
     </div>
     <div class="col-12">
         <div class="card">
+            <h5>Previsão de Consumo Semanal</h5>
+            <p-chart *ngIf="previsaoSemanalData" type="line" [data]="previsaoSemanalData" [options]="previsaoSemanalOptions"></p-chart>
+            <div *ngIf="!previsaoSemanalData" class="text-center p-4">
+                <p class="text-color-secondary">Carregando dados de previsão...</p>
+            </div>
+        </div>
+    </div>
+    <div class="col-12">
+        <div class="card">
             <h5>Comparativo: Consumo Real vs Esperado (por Mês)</h5>
             <p-table [value]="comparativoConsumo">
                 <ng-template pTemplate="header">

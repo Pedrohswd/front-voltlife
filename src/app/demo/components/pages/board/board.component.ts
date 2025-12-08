@@ -14,6 +14,7 @@ import { ActivatedRoute } from '@angular/router';
 import { Device } from 'src/app/model/device';
 import { DeviceService } from 'src/app/services/device.service';
 import { TableModule } from 'primeng/table';
+import { PredictionService } from 'src/app/services/prediction.service';
 
 @Component({
   selector: 'app-board',
@@ -33,6 +34,7 @@ export class BoardComponent implements OnInit, OnDestroy {
   doughnutTimeData: any;
   tempVsKwhData: any;
   tempPorDiaSemanaData: any;
+  previsaoSemanalData: any = null;
 
   // Opções dos Gráficos
   lineOptions: any;
@@ -44,6 +46,7 @@ export class BoardComponent implements OnInit, OnDestroy {
   doughnutTimeOptions: any;
   tempVsKwhOptions: any;
   tempPorDiaSemanaOptions: any;
+  previsaoSemanalOptions: any;
 
   // Métricas de Resumo
   mediaTemperatura = 0;
@@ -74,7 +77,8 @@ export class BoardComponent implements OnInit, OnDestroy {
     private layoutService: LayoutService,
     private houseService: HouseService,
     private route: ActivatedRoute,
-    private deviceService: DeviceService
+    private deviceService: DeviceService,
+    private predictionService: PredictionService
   ) {
     this.subscription = this.layoutService.configUpdate$
       .pipe(debounceTime(25))
@@ -82,6 +86,18 @@ export class BoardComponent implements OnInit, OnDestroy {
   }
 
   ngOnInit() {
+    // Inicializar datas: dataInicial = 2 dias atrás, dataFinal = hoje
+    const hoje = new Date();
+    const seteDiasAtras = new Date(hoje);
+    seteDiasAtras.setDate(seteDiasAtras.getDate() - 7);
+    
+    // Zerar horas para comparar apenas datas
+    hoje.setHours(0, 0, 0, 0);
+    seteDiasAtras.setHours(0, 0, 0, 0);
+    
+    this.filtros.dataInicial = seteDiasAtras;
+    this.filtros.dataFinal = hoje;
+    
     this.aplicarFiltros()
   }
 
@@ -89,6 +105,7 @@ export class BoardComponent implements OnInit, OnDestroy {
     this.deviceService.getByHouse(+this.route.snapshot.paramMap.get('id')!).subscribe(devices => {
       this.devices = devices
       this.fetchReportData(); // passa os dados INMETRO junto
+      this.fetchPredictionData(); // busca dados de previsão
     });
   }
 
@@ -339,6 +356,179 @@ export class BoardComponent implements OnInit, OnDestroy {
     if (this.subscription) {
       this.subscription.unsubscribe();
     }
+  }
+
+  fetchPredictionData() {
+    const houseId = +this.route.snapshot.paramMap.get('id')!;
+    console.log('Buscando dados de previsão para houseId:', houseId);
+    
+    this.predictionService.getByHouse(houseId).subscribe({
+      next: (data: any) => {
+        console.log('Dados recebidos da API de previsão:', data);
+        
+        // A estrutura é: { house_id, previsoes: { previsoes: [...] } }
+        const previsoesArray = data?.previsoes?.previsoes || data?.previsoes || [];
+        
+        if (!previsoesArray || previsoesArray.length === 0) {
+          console.warn('Nenhum dado de previsão retornado');
+          // Inicializar com dados vazios para evitar erro no gráfico
+          this.previsaoSemanalData = {
+            labels: [],
+            datasets: [{
+              label: 'Previsão de Consumo (kWh)',
+              data: [],
+              fill: true,
+              backgroundColor: 'rgba(66, 165, 245, 0.2)',
+              borderColor: '#42A5F5',
+              tension: 0.4
+            }]
+          };
+          return;
+        }
+
+        console.log('Array de previsões:', previsoesArray);
+        console.log('Primeiro item:', previsoesArray[0]);
+
+        // Processar dados de previsão
+        // Estrutura: { ds: "2025-12-06T00:00:00", yhat: 6.4202, yhat_lower: 1.7698, yhat_upper: 10.786 }
+        const previsoes = previsoesArray.map((item: any) => {
+          return {
+            date: new Date(item.ds),
+            yhat: +item.yhat || 0,
+            yhat_lower: +item.yhat_lower || 0,
+            yhat_upper: +item.yhat_upper || 0
+          };
+        });
+
+        // Ordenar por data
+        previsoes.sort((a: any, b: any) => a.date.getTime() - b.date.getTime());
+
+        console.log('Previsões processadas:', previsoes);
+
+        // Preparar labels e dados para o gráfico
+        const labels = previsoes.map((p: any) => {
+          return p.date.toLocaleDateString('pt-BR', { weekday: 'short', day: '2-digit', month: '2-digit' });
+        });
+        
+        const yhatData = previsoes.map((p: any) => p.yhat);
+        const yhatLowerData = previsoes.map((p: any) => p.yhat_lower);
+        const yhatUpperData = previsoes.map((p: any) => p.yhat_upper);
+
+        console.log('Labels do gráfico:', labels);
+        console.log('Dados yhat:', yhatData);
+        console.log('Dados yhat_lower:', yhatLowerData);
+        console.log('Dados yhat_upper:', yhatUpperData);
+
+        const documentStyle = getComputedStyle(document.documentElement);
+        const textColor = documentStyle.getPropertyValue('--text-color');
+        const textColorSecondary = documentStyle.getPropertyValue('--text-color-secondary');
+        const surfaceBorder = documentStyle.getPropertyValue('--surface-border');
+
+        this.previsaoSemanalData = {
+          labels,
+          datasets: [
+            {
+              label: 'Previsão Mínima (kWh)',
+              data: yhatLowerData,
+              fill: false,
+              borderColor: 'rgba(255, 152, 0, 0.5)',
+              backgroundColor: 'rgba(255, 152, 0, 0.1)',
+              tension: 0.4,
+              borderDash: [5, 5],
+              pointRadius: 0,
+              pointHoverRadius: 4,
+              order: 3
+            },
+            {
+              label: 'Previsão Média (kWh)',
+              data: yhatData,
+              fill: '+1',
+              backgroundColor: 'rgba(66, 165, 245, 0.15)',
+              borderColor: '#42A5F5',
+              borderWidth: 3,
+              tension: 0.4,
+              pointBackgroundColor: '#42A5F5',
+              pointBorderColor: '#fff',
+              pointHoverBackgroundColor: '#fff',
+              pointHoverBorderColor: '#42A5F5',
+              pointRadius: 5,
+              pointHoverRadius: 7,
+              order: 1
+            },
+            {
+              label: 'Previsão Máxima (kWh)',
+              data: yhatUpperData,
+              fill: false,
+              borderColor: 'rgba(255, 152, 0, 0.5)',
+              backgroundColor: 'rgba(255, 152, 0, 0.1)',
+              tension: 0.4,
+              borderDash: [5, 5],
+              pointRadius: 0,
+              pointHoverRadius: 4,
+              order: 2
+            }
+          ]
+        };
+
+      this.previsaoSemanalOptions = {
+        plugins: {
+          legend: {
+            labels: {
+              color: textColor
+            }
+          },
+          tooltip: {
+            mode: 'index',
+            intersect: false
+          }
+        },
+        scales: {
+          x: {
+            ticks: {
+              color: textColorSecondary
+            },
+            grid: {
+              color: surfaceBorder,
+              drawBorder: false
+            }
+          },
+          y: {
+            ticks: {
+              color: textColorSecondary
+            },
+            grid: {
+              color: surfaceBorder,
+              drawBorder: false
+            },
+            beginAtZero: true
+          }
+        },
+        interaction: {
+          mode: 'nearest',
+          axis: 'x',
+          intersect: false
+        }
+      };
+      
+      console.log('Gráfico de previsão configurado:', this.previsaoSemanalData);
+      },
+      error: (err) => {
+        console.error('Erro ao buscar dados de previsão:', err);
+        console.error('Detalhes do erro:', err.error, err.status, err.statusText);
+        // Inicializar com dados vazios para evitar erro no gráfico
+        this.previsaoSemanalData = {
+          labels: [],
+          datasets: [{
+            label: 'Previsão de Consumo (kWh)',
+            data: [],
+            fill: true,
+            backgroundColor: 'rgba(66, 165, 245, 0.2)',
+            borderColor: '#42A5F5',
+            tension: 0.4
+          }]
+        };
+      }
+    });
   }
 
   getZoomUrl(row: { aparelho: string }): string {
